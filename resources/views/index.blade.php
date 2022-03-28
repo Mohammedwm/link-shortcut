@@ -12,20 +12,32 @@
             integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
     <body>
         <div class="container">
             <br>
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all as $error)
+                    <li>{{$error}}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <div class="row">
                 <form action="{{ route('create') }}" method="post">
                     @csrf
                     <div class="mb-3">
                         <label for="previous_link" class="form-label">Previous Link</label>
-                        <input type="text" class="form-control" name="prev_link"
-                            placeholder="Previous Link" value="{{ old('prev_link') }}">
+                        <input type="text" class="form-control" name="prev_link" placeholder="Previous Link"
+                            value="{{ old('prev_link') }}">
                     </div>
+                    @error('prev_link')
+                    <p class="invalid-feedback">{{$message}}</p>
+                    @enderror
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary" value="ff">Create Link</button>
                     </div>
@@ -42,14 +54,16 @@
                 </thead>
                 <tbody>
                     @php
-                        $i=1;
+                    $i=1;
                     @endphp
                     @foreach ($links as $link)
                     <tr>
                         <th scope="row">{{$i++;}}</th>
                         <td>{{$link->prev_link}}</td>
-                        <td><a href="{{ route('open',[$link->new_link]) }}" target="_blank">{{config('app.url').$link->new_link}}</a></td>
-                        <td><a class="btn btn-sm btn-outline-primary" onclick="CopyText('{{config('app.url').$link->new_link}}')">Copy Link</a></td>
+                        <td><a href="{{ route('open',[$link->new_link]) }}"
+                                target="_blank">{{config('app.url').$link->new_link}}</a></td>
+                        <td><a class="btn btn-sm btn-outline-primary"
+                                onclick="CopyText('{{config('app.url').$link->new_link}}')">Copy</a></td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -62,9 +76,9 @@
         </script>
         <script>
             function CopyText(link){
-                console.log(link);
                 navigator.clipboard.writeText(link);
             }
+
         </script>
     </body>
 

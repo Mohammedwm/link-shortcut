@@ -10,12 +10,13 @@ class HomeController extends Controller
     public function index(){
         $links = Link::orderBy('created_at', 'desc')->get();
 
-        return view('index', [
-            'links' => $links,
-        ]);
+        return view('index', ['links' => $links,]);
     }
     public function create(Request $request)
     {
+        $request->validate([
+            'prev_link' => 'required|max:255|url'
+        ]);
         $data['prev_link'] = $request->post('prev_link');
         $data['new_link'] = uniqid();
         $link = Link::create($data);
